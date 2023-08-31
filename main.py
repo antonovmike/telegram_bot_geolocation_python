@@ -12,11 +12,6 @@ TOKEN = os.getenv('TOKEN')
 bot = telebot.TeleBot(TOKEN)
 
 
-@bot.message_handler(func=lambda message: True)
-def send_welcome(message):
-    bot.reply_to(message, "Hi, send me your location")
-
-
 @bot.message_handler(commands=['start'])
 def start(message):
     keyboard = ReplyKeyboardMarkup(resize_keyboard=True)

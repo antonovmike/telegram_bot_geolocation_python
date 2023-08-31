@@ -1,4 +1,4 @@
-# tg_bot_geolocation
+# telegram_bot_geolocation
 
 ```bash
 apt install python3.10-venv
@@ -10,7 +10,7 @@ Upgrade package installer for Python and install packages:
 ```bash
 pip install --upgrade pip
 ```
-https://www.psycopg.org/docs/install.html
+Install psycopg2-binary https://www.psycopg.org/docs/install.html
 ```bash
 pip install psycopg2-binary
 ```
