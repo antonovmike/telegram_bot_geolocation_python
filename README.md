@@ -31,4 +31,5 @@ sudo su postgres
 psql
 CREATE USER tg_bot WITH password 'qwerty';
 CREATE DATABASE telegram_db OWNER tg_bot;
+\connect telegram_db;
 ```

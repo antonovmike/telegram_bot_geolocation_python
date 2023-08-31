@@ -12,6 +12,23 @@ TOKEN = os.getenv('TOKEN')
 bot = telebot.TeleBot(TOKEN)
 
 
+@bot.message_handler(content_types=['location'])
+def handle_location(message):
+    bot.send_message(message.chat.id, "TEST 1")
+    user_location = (message.location.latitude, message.location.longitude)
+    print(user_location)
+    cursor.execute("SELECT name, address, google_map FROM places")
+    places = cursor.fetchall()
+    print(places)
+    distances = [(place, geodesic(user_location, place['google_map']).miles) for place in places]
+    print(distances)
+    distances.sort(key=lambda x: x[1])
+    for place, distance in distances[:2]:
+        bot.send_message(message.chat.id, "TEST 2")
+        bot.send_message(message.chat.id,
+                         f"Name: {place['name']}\nAddress: {place['address']}\nMap: {place['google_map']}")
+
+
 @bot.message_handler(commands=['start'])
 def start(message):
     keyboard = ReplyKeyboardMarkup(resize_keyboard=True)
@@ -54,18 +71,6 @@ def update_places():
             (row['name'], row['address'], row['google_map'])
         )
     connection.commit()
-
-
-@bot.message_handler(content_types=['location'])
-def handle_location(message):
-    user_location = (message.location.latitude, message.location.longitude)
-    cursor.execute("SELECT name, address, google_map FROM places")
-    places = cursor.fetchall()
-    distances = [(place, geodesic(user_location, place['google_map']).miles) for place in places]
-    distances.sort(key=lambda x: x[1])
-    for place, distance in distances[:2]:
-        bot.send_message(message.chat.id,
-                         f"Name: {place['name']}\nAddress: {place['address']}\nMap: {place['google_map']}")
 
 
 bot.polling()
