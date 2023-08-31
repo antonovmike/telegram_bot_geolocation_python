@@ -4,6 +4,7 @@ import os
 import telebot
 from dotenv import load_dotenv
 from geopy.distance import geodesic
+from telebot.types import KeyboardButton, ReplyKeyboardMarkup
 
 load_dotenv()
 TOKEN = os.getenv('TOKEN')
@@ -14,6 +15,19 @@ bot = telebot.TeleBot(TOKEN)
 @bot.message_handler(func=lambda message: True)
 def send_welcome(message):
     bot.reply_to(message, "Hi, send me your location")
+
+
+@bot.message_handler(commands=['start'])
+def start(message):
+    keyboard = ReplyKeyboardMarkup(resize_keyboard=True)
+    button_geo = KeyboardButton(text="Send geo-location", request_location=True)
+    keyboard.add(button_geo)
+    bot.send_message(message.chat.id, "Press the button to send your geo-location", reply_markup=keyboard)
+
+
+@bot.message_handler(content_types=['location'])
+def location(message):
+    bot.send_message(message.chat.id, f"Your geo-location: {message.location.latitude}, {message.location.longitude}")
 
 
 connection = psycopg2.connect(
@@ -40,7 +54,7 @@ def update_places():
         cursor.execute(
             """
             INSERT INTO places (name, address, google_map)
-            VALUES (%s, %s, %s, %s)
+            VALUES (%s, %s, %s)
             """,
             (row['name'], row['address'], row['google_map'])
         )
