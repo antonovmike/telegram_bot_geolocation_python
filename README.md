@@ -26,25 +26,3 @@ python main.py
 ```bash
 deactivate
 ```
-
-
-Для подключения к базе данных PostgreSQL вы должны знать следующие параметры:
-host
-Это имя сервера или IP-адрес, на котором работает сервер PostgreSQL. 
-Если вы работаете на локальной машине, вы можете использовать localhost или его IP-адрес, то есть 127.0.0.1. 
-Если ваш сервер PostgreSQL размещен на удаленном сервере, вам потребуется ввести соответствующий IP-адрес или доменное имя pynative.com.
-database
-Это имя базы данных, к которой вы хотите подключиться. 
-Вы должны создать эту базу данных на вашем сервере PostgreSQL перед подключением к ней postgresqltutorial.com.
-user и password
-Это имя пользователя и пароль, которые вы используете для работы с PostgreSQL. 
-По умолчанию имя пользовате��я для базы данных PostgreSQL - postgres. 
-Пароль задается пользователем во время установки PostgreSQL pynative.com.
-```python
-connection = psycopg2.connect(
-    host="localhost",
-    database="postgres",
-    user="postgres",
-    password="postgres"
-)
-```
