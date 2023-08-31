@@ -1,12 +1,12 @@
+import pandas as pd
 import psycopg2
-import telebot
 import os
+import telebot
 from dotenv import load_dotenv
-
+from geopy.distance import geodesic
 
 load_dotenv()
 TOKEN = os.getenv('TOKEN')
-
 
 bot = telebot.TeleBot(TOKEN)
 
@@ -33,5 +33,32 @@ cursor.execute("""
     )
 """)
 connection.commit()
+
+
+def update_places():
+    df = pd.read_excel('places.ods')  # Чтение файла .ods
+    for index, row in df.iterrows():
+        cursor.execute(
+            """
+            INSERT INTO places (id, name, address, google_map)
+            VALUES (%s, %s, %s, %s)
+            ON CONFLICT (id) DO NOTHING
+            """,
+            (row['ID'], row['name'], row['address'], row['google_map'])
+        )
+    connection.commit()
+
+
+@bot.message_handler(content_types=['location'])
+def handle_location(message):
+    user_location = (message.location.latitude, message.location.longitude)
+    cursor.execute("SELECT name, address, google_map FROM places")
+    places = cursor.fetchall()
+    distances = [(place, geodesic(user_location, place['google_map']).miles) for place in places]
+    distances.sort(key=lambda x: x[1])
+    for place, distance in distances[:2]:  # Отправка двух ближайших мест
+        bot.send_message(message.chat.id,
+                         f"Name: {place['name']}\nAddress: {place['address']}\nMap: {place['google_map']}")
+
 
 bot.polling()
