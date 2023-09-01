@@ -17,7 +17,7 @@ def handle_location(message):
     bot.send_message(message.chat.id, "TEST 1")
     user_location = (message.location.latitude, message.location.longitude)
     print(user_location)
-    cursor.execute("SELECT name, address, google_map FROM places")
+    cursor.execute("SELECT * FROM places")
     places = cursor.fetchall()
     print(places)
     distances = [(place, geodesic(user_location, place['google_map']).miles) for place in places]
@@ -54,7 +54,9 @@ cursor.execute("""
     CREATE TABLE IF NOT EXISTS places (
         name VARCHAR(255),
         address VARCHAR(255),
-        google_map VARCHAR(255)
+        google_map VARCHAR(255),
+        latitude INT,
+        longitude INT
     )
 """)
 connection.commit()
@@ -65,10 +67,10 @@ def update_places():
     for index, row in df.iterrows():
         cursor.execute(
             """
-            INSERT INTO places (name, address, google_map)
-            VALUES (%s, %s, %s)
+            INSERT INTO places (name, address, google_map, latitude, longitude)
+            VALUES (%s, %s, %s, %s, %s)
             """,
-            (row['name'], row['address'], row['google_map'])
+            (row['name'], row['address'], row['google_map'], row['latitude'], row['longitude'])
         )
     connection.commit()
 
