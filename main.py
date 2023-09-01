@@ -14,20 +14,16 @@ bot = telebot.TeleBot(TOKEN)
 
 @bot.message_handler(content_types=['location'])
 def handle_location(message):
-    bot.send_message(message.chat.id, "TEST 1")
     user_location = (message.location.latitude, message.location.longitude)
     print(f"User location: {user_location}")
     cursor.execute("SELECT * FROM places")
     places = cursor.fetchall()
     print(f"Places: {places}")
-    fake_cafe = places[3]
-    point_3 = (fake_cafe[3], fake_cafe[4])
-    print(f"Fake cafe: {point_3}")
     distances = [(place, geodesic(user_location, (place[3], place[4])).km) for place in places]
     print(f"Distances: {distances}")
     distances.sort(key=lambda x: x[1])
     for place, distance in distances[:2]:
-        bot.send_message(message.chat.id, "TEST 2")
+        bot.send_photo(message.chat.id, 'https://musicaltheatre.by/thumb/2/YYtRgTxXpHwABwtEAYzk-g/r/d/lebedinoye_glavnaya.jpg')
         bot.send_message(message.chat.id,
                          f"Name: {place[0]}\nAddress: {place[1]}\nMap: {place[2]}")
 
@@ -59,21 +55,23 @@ cursor.execute("""
         address VARCHAR(255),
         google_map VARCHAR(255),
         latitude INT,
-        longitude INT
+        longitude INT,
+        description VARCHAR(255),
+        picture VARCHAR(255)
     )
 """)
 connection.commit()
 
 
 def update_places():
-    df = pd.read_excel('places.ods')
+    df = pd.read_excel('catalog.ods')
     for index, row in df.iterrows():
         cursor.execute(
             """
-            INSERT INTO places (name, address, google_map, latitude, longitude)
-            VALUES (%s, %s, %s, %s, %s)
+            INSERT INTO places (name, address, google_map, latitude, longitude, description, picture)
+            VALUES (%s, %s, %s, %s, %s, %s, %s)
             """,
-            (row['name'], row['address'], row['google_map'], row['latitude'], row['longitude'])
+            (row['name'], row['address'], row['google_map'], row['latitude'], row['longitude'], row['description'], row['picture'])
         )
     connection.commit()
 
