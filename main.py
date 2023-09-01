@@ -20,13 +20,20 @@ def handle_location(message):
     cursor.execute("SELECT * FROM places")
     places = cursor.fetchall()
     print(f"Places: {places}")
-    distances = [(place, geodesic(user_location, place['google_map']).miles) for place in places]
+    # SHOULD BE LIKE THIS:
+    # point_1 = (41.7054533, 44.7854573)
+    # point_2 = (41.6989859, 44.7931742)
+    fake_cafe = places[3]
+    point_3 = (fake_cafe[3], fake_cafe[4])
+    print(f"Fake cafe: {point_3}")
+    # geodesic(point_1, point_2).km
+    distances = [(place, geodesic(user_location, point_3).km) for place in places]
     print(f"Distances: {distances}")
     distances.sort(key=lambda x: x[1])
     for place, distance in distances[:2]:
         bot.send_message(message.chat.id, "TEST 2")
         bot.send_message(message.chat.id,
-                         f"Name: {place['name']}\nAddress: {place['address']}\nMap: {place['google_map']}")
+                         f"Name: {place[0]}\nAddress: {place[1]}\nMap: {place[2]}")
 
 
 @bot.message_handler(commands=['start'])
