@@ -23,7 +23,8 @@ def handle_location(message):
     print(f"Distances: {distances}")
     distances.sort(key=lambda x: x[1])
     for place, distance in distances[:2]:
-        bot.send_photo(message.chat.id, 'https://musicaltheatre.by/thumb/2/YYtRgTxXpHwABwtEAYzk-g/r/d/lebedinoye_glavnaya.jpg')
+        photo = open(f"{place[6]}", 'rb')
+        bot.send_photo(message.chat.id, photo)
         bot.send_message(message.chat.id,
                          f"Name: {place[0]}\nAddress: {place[1]}\nMap: {place[2]}")
 
@@ -56,7 +57,7 @@ cursor.execute("""
         google_map VARCHAR(255),
         latitude INT,
         longitude INT,
-        description VARCHAR(255),
+        description TEXT,
         picture VARCHAR(255)
     )
 """)
@@ -71,7 +72,8 @@ def update_places():
             INSERT INTO places (name, address, google_map, latitude, longitude, description, picture)
             VALUES (%s, %s, %s, %s, %s, %s, %s)
             """,
-            (row['name'], row['address'], row['google_map'], row['latitude'], row['longitude'], row['description'], row['picture'])
+            (row['name'], row['address'], row['google_map'], row['latitude'], row['longitude'], row['description'],
+             row['picture'])
         )
     connection.commit()
 
