@@ -1,4 +1,4 @@
-import pandas as pd
+# import pandas as pd
 import psycopg2
 import os
 import telebot
@@ -44,32 +44,32 @@ connection = psycopg2.connect(
 )
 cursor = connection.cursor()
 
-cursor.execute("""
-    CREATE TABLE IF NOT EXISTS places (
-        name VARCHAR(255),
-        address VARCHAR(255),
-        google_map VARCHAR(255),
-        latitude INT,
-        longitude INT,
-        description TEXT,
-        picture VARCHAR(255)
-    )
-""")
-connection.commit()
-
-
-def update_places():
-    df = pd.read_excel('catalog.ods')
-    for index, row in df.iterrows():
-        cursor.execute(
-            """
-            INSERT INTO places (name, address, google_map, latitude, longitude, description, picture)
-            VALUES (%s, %s, %s, %s, %s, %s, %s)
-            """,
-            (row['name'], row['address'], row['google_map'], row['latitude'], row['longitude'], row['description'],
-             row['picture'])
-        )
-    connection.commit()
+# cursor.execute("""
+#     CREATE TABLE IF NOT EXISTS places (
+#         name VARCHAR(255),
+#         address VARCHAR(255),
+#         google_map VARCHAR(255),
+#         latitude INT,
+#         longitude INT,
+#         description TEXT,
+#         picture VARCHAR(255)
+#     )
+# """)
+# connection.commit()
+#
+#
+# def update_places():
+#     df = pd.read_excel('catalog.ods')
+#     for index, row in df.iterrows():
+#         cursor.execute(
+#             """
+#             INSERT INTO places (name, address, google_map, latitude, longitude, description, picture)
+#             VALUES (%s, %s, %s, %s, %s, %s, %s)
+#             """,
+#             (row['name'], row['address'], row['google_map'], row['latitude'], row['longitude'], row['description'],
+#              row['picture'])
+#         )
+#     connection.commit()
 
 
 bot.polling()
