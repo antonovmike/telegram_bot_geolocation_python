@@ -25,8 +25,7 @@ def handle_location(message):
     for place, distance in distances[:2]:
         photo = open(f"{place[6]}", 'rb')
         bot.send_photo(message.chat.id, photo)
-        bot.send_message(message.chat.id,
-                         f"Name: {place[0]}\nAddress: {place[1]}\nMap: {place[2]}")
+        bot.send_message(message.chat.id, f"{place[0]}\n{place[1]}\n{place[2]}\n{place[5]}")
 
 
 @bot.message_handler(commands=['start'])
@@ -35,11 +34,6 @@ def start(message):
     button_geo = KeyboardButton(text="Send geo-location", request_location=True)
     keyboard.add(button_geo)
     bot.send_message(message.chat.id, "Press the button to send your geo-location", reply_markup=keyboard)
-
-
-@bot.message_handler(content_types=['location'])
-def location(message):
-    bot.send_message(message.chat.id, f"Your geo-location: {message.location.latitude}, {message.location.longitude}")
 
 
 connection = psycopg2.connect(
