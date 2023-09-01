@@ -16,12 +16,12 @@ bot = telebot.TeleBot(TOKEN)
 def handle_location(message):
     bot.send_message(message.chat.id, "TEST 1")
     user_location = (message.location.latitude, message.location.longitude)
-    print(user_location)
+    print(f"User location: {user_location}")
     cursor.execute("SELECT * FROM places")
     places = cursor.fetchall()
-    print(places)
+    print(f"Places: {places}")
     distances = [(place, geodesic(user_location, place['google_map']).miles) for place in places]
-    print(distances)
+    print(f"Distances: {distances}")
     distances.sort(key=lambda x: x[1])
     for place, distance in distances[:2]:
         bot.send_message(message.chat.id, "TEST 2")
