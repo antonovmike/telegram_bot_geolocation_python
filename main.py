@@ -20,14 +20,10 @@ def handle_location(message):
     cursor.execute("SELECT * FROM places")
     places = cursor.fetchall()
     print(f"Places: {places}")
-    # SHOULD BE LIKE THIS:
-    # point_1 = (41.7054533, 44.7854573)
-    # point_2 = (41.6989859, 44.7931742)
     fake_cafe = places[3]
     point_3 = (fake_cafe[3], fake_cafe[4])
     print(f"Fake cafe: {point_3}")
-    # geodesic(point_1, point_2).km
-    distances = [(place, geodesic(user_location, point_3).km) for place in places]
+    distances = [(place, geodesic(user_location, (place[3], place[4])).km) for place in places]
     print(f"Distances: {distances}")
     distances.sort(key=lambda x: x[1])
     for place, distance in distances[:2]:
