@@ -1,5 +1,28 @@
 import pandas as pd
+import psycopg2
 from sqlalchemy import create_engine
+
+
+connection = psycopg2.connect(
+    host="localhost",
+    database="telegram_db",
+    user="tg_bot",
+    password="qwerty"
+)
+cursor = connection.cursor()
+
+cursor.execute("""
+    CREATE TABLE IF NOT EXISTS places (
+        name VARCHAR(255),
+        address VARCHAR(255),
+        google_map VARCHAR(255),
+        latitude REAL,
+        longitude REAL,
+        description TEXT,
+        picture VARCHAR(255)
+    )
+""")
+connection.commit()
 
 # Connect to PostgreSQL
 engine = create_engine('postgresql://tg_bot:qwerty@localhost/telegram_db')
