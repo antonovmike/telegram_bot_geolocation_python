@@ -45,14 +45,11 @@ def send_place_info(message, place):
     bot.send_venue(message.chat.id, place[3], place[4], f"{place[0]}", f"{place[1]}")
 
 
-
-connection = psycopg2.connect(
+with psycopg2.connect(
     host="localhost",
     database="telegram_db",
     user="tg_bot",
     password="qwerty"
-)
-cursor = connection.cursor()
-
-
-bot.polling()
+) as connection:
+    cursor = connection.cursor()
+    bot.polling()
