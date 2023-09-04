@@ -1,4 +1,6 @@
-# telegram_bot_geolocation
+# telegram_bot_geolocation_python
+
+[Rust version](https://github.com/antonovmike/telegram_bot_geolocation_rust) of this telegram bot
 
 ```bash
 apt install python3.10-venv
